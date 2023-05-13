@@ -1,0 +1,117 @@
+query whoami {
+    whoami {
+        id
+        createdAt
+        updatedAt
+        status
+        roles
+        souls {
+            id
+            createdAt
+            updatedAt
+            address
+            owner {
+                sessions {
+                    address
+                }
+            }
+            relatedTokens {
+                id
+                createdAt
+                updatedAt
+                collection {
+                    name
+                }
+                idInCollection
+                creator {
+                    sessions {
+                        address
+                    }
+                }
+                targetSoul {
+                    id
+                    address
+                    owner {
+                        sessions {
+                            address
+                        }
+                    }
+                }
+                metadata
+            }
+        }
+    }
+}
+
+mutation MetadataCreate($metadata: Json!) {
+    metadataCreate (metadata: $metadata)
+}
+
+mutation AddEventTokenCreate(
+    $collectionContractAddress: String!
+    $tokenId: String!
+    $description: String!
+    $soulAddress: String!
+    $metadataId: Int!
+) {
+    addEventTokenCreate(
+        collectionContractAddress: $collectionContractAddress
+        tokenId: $tokenId
+        description: $description
+        soulAddress: $soulAddress
+        metadataId: $metadataId
+    )
+}
+
+mutation AddEventSoulCreate($soulAddress: String!) {
+    addEventSoulCreate(soulAddress: $soulAddress)
+}
+
+mutation AddEventCollectionCreate(
+    $contractAddress: String!
+    $collectionName: String!
+    $collectionSymbol: String!
+) {
+    addEventCollectionCreate(
+        contractAddress: $contractAddress
+        collectionName: $collectionName
+        collectionSymbol: $collectionSymbol
+    )
+}
+
+query myCollections($onlyMine: Boolean!) {
+    whoami {
+        collections(onlyMine: $onlyMine) {
+        address
+           tokens {
+               id
+               createdAt
+               updatedAt
+               idInCollection
+               collection {
+                   address
+                   name
+               }
+               targetSoul {
+                   address
+               }
+               metadata
+           }
+       }
+   }
+}
+
+query getToken($collectionAddress: String!, $tokenId: String!) {
+    token(collectionAddress: $collectionAddress, tokenId: $tokenId) {
+        id
+        collection {
+            name
+            address
+        }
+        idInCollection
+        metadata
+        targetSoul {
+            address
+        }
+    }
+}

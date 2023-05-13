@@ -1,0 +1,32 @@
+.copy {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  background: url('/assets/copy.svg') center/contain no-repeat;
+  cursor: pointer;
+
+  &:hover {
+    opacity: .8;
+  }
+
+  &:active {
+    opacity: .6;
+  }
+}
+
+.copy2 {
+  display: inline-block;
+  width: 21px;
+  height: 24px;
+  background: url('/assets/copy2.svg') center/contain no-repeat;
+  cursor: pointer;
+
+  &:hover {
+    opacity: .8;
+  }
+
+  &:active {
+    opacity: .6;
+  }
+}
+

@@ -1,0 +1,26 @@
+overwrite: true
+schema:
+    - ${NEXT_PUBLIC_GRAPHQL_API_URL}:
+          headers:
+              address: "0x018A81aaF8b984d0f0d962580D476505d4130b94"
+documents: "./src/graphql/**/*.graphql"
+generates:
+    src/generated/graphql.tsx:
+        plugins:
+            - "typescript"
+            - "typescript-operations"
+            - "typescript-react-apollo"
+            -   add:
+                    content:
+                        - "/* eslint-disable */"
+        config:
+            skipTypename: false
+            withHooks: true
+            withHOC: false
+            withComponent: false
+    src/generated/schema.graphql:
+        plugins:
+            - schema-ast
+        config:
+            includeDirectives: true
+            sort: true

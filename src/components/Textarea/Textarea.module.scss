@@ -1,7 +1,7 @@
 .textarea {
   width: 100%;
   min-height: 96px;
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.72)), linear-gradient(112.95deg, #5755FF -13.39%, #FF8AA6 118.44%);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.63), rgba(255, 255, 255, 0.63)), linear-gradient(112.95deg, #F95286 -13.39%, #F8904A 118.44%);
   border-radius: 15px;
   border: 2px solid #FFFFFF;
   font-family: 'Gilroy', sans-serif;
@@ -18,23 +18,11 @@
     font-family: 'Gilroy', sans-serif;
     font-weight: 700;
     font-size: 16px;
-    background: linear-gradient(112.95deg, #5755FF -13.39%, #FF8AA6 118.44%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
+    color: #150B4D;
   }
 
   &:focus {
     background: #FFFFFF;
-    border: 2px solid #DBC1EB;
-  }
-
-  &:focus::placeholder {
-    background: linear-gradient(112.95deg, rgba(87,85,255,0.5) -13.39%, rgba(255, 138, 166, 0.5) 118.44%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-fill-color: transparent;
+    border: 2px solid #F95286;
   }
 }

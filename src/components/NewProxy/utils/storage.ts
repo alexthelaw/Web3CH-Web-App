@@ -40,7 +40,7 @@ export const useCreateProxyGroupStorage = create(
     }
   ));
 
-export const useMintSBTStorage = create(
+export const useMintNFTStorage = create(
   persist<IMintSBTStorage>(
     (set) => ({
       collectionAddress: '',

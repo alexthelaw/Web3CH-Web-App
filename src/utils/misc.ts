@@ -27,7 +27,18 @@ export interface MetaData {
   discord?: string;
 }
 
-export const createMetaData = ({agentNickname, positionName, powerDescription, telegram, twitter, discord}: MetaData) => {
+export type MetaDataResponse = {
+  agentNickname: string,
+  positionName: string,
+  powerDescription: string,
+  socialAccounts: {
+    telegram: string,
+    twitter: string,
+    discord: string
+  }
+}
+
+export const createMetaData = ({agentNickname, positionName, powerDescription, telegram, twitter, discord}: MetaData): MetaDataResponse => {
   return {
     agentNickname: agentNickname,
     positionName: positionName,

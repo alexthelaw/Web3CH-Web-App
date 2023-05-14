@@ -2,7 +2,6 @@ export * from './P/P';
 export * from './Button/Button';
 export * from './Header';
 export * from './Card/Card';
-export * from './ProxyCard/ProxyCard';
 export * from './ProxiesTable/ProxiesTable';
 export * from './Input/Input';
 export * from './Textarea/Textarea';

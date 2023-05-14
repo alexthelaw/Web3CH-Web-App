@@ -1,7 +1,7 @@
-import {MetaData} from '../../utils/misc';
+import {MetaData, MetaDataResponse} from '../../utils/misc';
 import {NextApiRequest, NextApiResponse} from 'next';
 
-type Response = MetaData & {tokenId: bigint | string, collectionAddress: string};
+export type Response = MetaDataResponse & {tokenId: bigint | string, collectionAddress: string};
 
 const metaDataStore: Array<Response> = [];
 
@@ -12,7 +12,7 @@ export default function handler(req: NextApiRequest,
   switch (method) {
     case 'GET':
       if (req.query?.collectionAddress && req.query?.tokenId) {
-        const item = metaDataStore.find(el => el.collectionAddress === req.query.collectionAddress && el.tokenId === BigInt(Number(req.query.tokenId)));
+        const item = metaDataStore.filter(el => el.collectionAddress === req.query.collectionAddress).map(el => ({...el, tokenId: el.tokenId.toString()}))[0];
         if (item) {
           item.tokenId = item.tokenId.toString();
           res.status(200).json(item);

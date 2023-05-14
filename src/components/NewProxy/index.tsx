@@ -5,7 +5,7 @@ import {Input} from '../Input/Input';
 import {Button} from '../Button/Button';
 import styles from '../../styles/Login.module.scss';
 import {deployContract} from '../../utils/deploySmartContract';
-import {useCreateProxyGroupStorage, useMintSBTStorage} from './utils/storage';
+import {useCreateProxyGroupStorage, useMintNFTStorage} from './utils/storage';
 import {useUserCollectionsStore} from '../../store/userCollectionsStore';
 
 export type ContractDeployResultType = 'deployed' | 'not-deployed' | null
@@ -13,8 +13,8 @@ export type ContractDeployResultType = 'deployed' | 'not-deployed' | null
 // eslint-disable-next-line complexity
 export const NewProxy = () => {
 
-  const {name, symbol, owner, setName, setOwner, setSymbol, clear} = useCreateProxyGroupStorage();
-  const {setCollectionAddress} = useMintSBTStorage();
+  const {name, symbol, setName, setSymbol, clear} = useCreateProxyGroupStorage();
+  const {setCollectionAddress} = useMintNFTStorage();
   const {addUserCollection} = useUserCollectionsStore();
 
 
@@ -37,10 +37,6 @@ export const NewProxy = () => {
     }
     if (!symbol) {
       setError({...error, symbolError: true});
-      return;
-    }
-    if (!owner) {
-      setError({...error, addrError: true});
       return;
     }
     try {
@@ -72,40 +68,39 @@ export const NewProxy = () => {
 
   };
 
-  return <><P size="l" weight="bold">New Proxy Group</P>
-    <P style={{width: '620px', textAlign: 'center', marginTop: '18px'}}>Choose a meaningful name for the Group so that it is clear at a glance which representatives it covers. For example, DAO X Gold Contributors</P>
+  return <>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center'}}>
+      <P size="l" weight="bold" style={{fontFamily: 'Panchang'}} color={'white'} className={styles.underline}>Step 1.</P>
+      <P style={{width: '620px', marginTop: '18px'}} color={'white'}>
+      Create an NFT collection of tokenized proxies for your DAO
+      </P>
+    </div>
     <Card style={load ? {marginTop: '40px', alignItems: 'center', padding: '60px 20px'} : {marginTop: '40px', gap: '18px'}}>
       {load
         ? <div className={styles.loader_wrapper}>
           <div className={styles.loader}/>
         </div>
         // eslint-disable-next-line sonarjs/no-duplicate-string
-        : <><Input placeholder="Group name" id={'group_name'} style={error.nameError ? {border: '2px solid red'} : undefined} onChange={e => {
+        : <><Input placeholder="Collection name" id={'group_name'} style={error.nameError ? {border: '2px solid red'} : undefined} onChange={e => {
           setError({...error, nameError: false});
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           setName(e.target.value);
         }} value={name}/>
-        <Input placeholder="Group symbol" id={'group_symbol'} style={error.symbolError ? {border: '2px solid red'} : undefined} onChange={e => {
+        <Input placeholder="Collection symbol" id={'group_symbol'} style={error.symbolError ? {border: '2px solid red'} : undefined} onChange={e => {
           setError({...error, symbolError: false});
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           setSymbol(e.target.value);
         }} value={symbol}/>
-        <Input placeholder="Owner soul address" id={'group_addr'} style={error.symbolError ? {border: '2px solid red'} : undefined} onChange={e => {
-          setError({...error, addrError: false});
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          setOwner(e.target.value);
-        }} value={owner}/>
         <div style={{width: '100%', margin: '50px 0 25px'}}>
-          <Button size="l" onClick={() => createNewProxyGroup()}>Create new group</Button>
+          <Button size="l" onClick={() => createNewProxyGroup()} disabled={!name && !symbol}>Create collection</Button>
         </div></>
       }
       {contractDeployResult === 'deployed' &&
         <>
-          <P style={{color: 'green', textAlign: 'center'}}>Proxy group was created successfully</P>
-          <P style={{color: 'green', textAlign: 'center'}}>Your proxy group address {contractAddressAfterDeploy}</P>
+          <P style={{color: 'green', textAlign: 'center'}}>NFT collection was created successfully</P>
+          <P style={{color: 'green', textAlign: 'center'}}>Your NFT collection address {contractAddressAfterDeploy}</P>
         </>
       }
       {contractDeployResult === 'not-deployed' && (<P style={{color: 'red', textAlign: 'center'}}>Something go wrong, please try again</P>)}

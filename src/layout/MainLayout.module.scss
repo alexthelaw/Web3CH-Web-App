@@ -1,10 +1,28 @@
 .wrapper{
   width: 100%;
   min-height: 100vh;
-  background: url('/assets/bg.svg') center/cover no-repeat;
+  //background: url('/assets/bg.svg') center/cover no-repeat;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.29), rgba(255, 255, 255, 0.29)), url('/assets/bg.webp');
+}
+
+.wrapper_login {
+  width: inherit;
+  min-height: inherit;
+  background: url('/assets/login.png');
+  position: absolute;
+  z-index: 0;
+}
+
+.form_bg {
+  width: 900px;
+  height: 690px;
+  background: url('/assets/login_cover.png');
+  position: absolute;
+  z-index: 0;
 }
 
 .main {
+  z-index: 1;
   position: relative;
   width: 100%;
   max-width: 1160px;

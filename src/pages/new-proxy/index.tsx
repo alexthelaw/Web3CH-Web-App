@@ -1,34 +1,27 @@
-import React, {ReactNode, useState} from 'react';
+import React, {ReactNode} from 'react';
 
 import {NewProxy} from '../../components/NewProxy';
 import {MintProxy} from '../../components/NewProxy/mintProxy';
 import {BackButton} from '../../components';
-import {OldCollections} from '../../components/OldCollections';
+import {useUserCollectionsStore} from '../../store/userCollectionsStore';
+import {useUserProxyStore} from '../../store/useProxiesStore';
+import {SetExecutor} from '../../components/SetExecutor';
 
 export default function NewProxyPage(): ReactNode {
 
+  const {userCollections} = useUserCollectionsStore();
+  const {userProxies} = useUserProxyStore();
 
   return (
     <>
-      <BackButton link="/collections"/>
-      <SwitchNewOrOld/>
-      <MintProxy/>
+      {userCollections.length === 0
+        ? <>
+          <BackButton link="/"/>
+          <NewProxy/>
+        </>
+        : <>{userProxies.length === 0 ? <MintProxy/> : <SetExecutor/>}</>
+      }
     </>
   );
 }
-
-const SwitchNewOrOld = () => {
-  const [switchView, setSwitchView] = useState<boolean>(false);
-
-  const change = () => {
-    setSwitchView(!switchView);
-  };
-
-  return <>
-    <button onClick={change}>Switch</button>
-    {
-      switchView ? <OldCollections/> : <NewProxy/>
-    }
-  </>;
-};
 

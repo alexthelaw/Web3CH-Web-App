@@ -21,6 +21,6 @@ export const useUserProxyStore = create(persist<IUserProxiesStore>((set) => ({
   addUserProxy: (role) =>
     set((state) => ({
       ...state,
-      userProxies: state.userProxies.push(role)
+      useUserProxyStore: state.userProxies.push(role)
     }))
 }), {name: 'USER_PROXIES'}));

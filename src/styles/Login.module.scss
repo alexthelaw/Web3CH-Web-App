@@ -1,3 +1,14 @@
+.underline {
+    position: relative;
+    &:after {
+        z-index: -1;
+        content: url("/assets/underline.svg");
+        position: absolute;
+        left: 0;
+        bottom: -19px;
+    }
+}
+
 .card {
     display: flex;
     flex-direction: column;

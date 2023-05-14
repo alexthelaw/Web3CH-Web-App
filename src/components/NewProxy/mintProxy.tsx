@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {useRouter} from 'next/router';
 import {Button, Card, Input, P, Textarea, Loader, Modal} from '../../components';
 import {createMetaData, randomNumber} from '../../utils/misc';
-import {useValueStorage} from '../Select/valueStorage';
-import {createAccount, mintNFT, mintSbt, setExecutor} from '../../utils/web3smarts';
+import {createAccount, mintNFT} from '../../utils/web3smarts';
 import {ContractDeployResultType} from './index';
-import {useMintSBTStorage} from './utils/storage';
+import {useMintNFTStorage} from './utils/storage';
 import {useAccount} from 'wagmi';
+import {useUserProxyStore} from '../../store/useProxiesStore';
+import styles from '../../styles/Login.module.scss';
 
 const errorStyle = {border: '2px solid red'};
 
@@ -21,15 +21,15 @@ export const MintProxy = () => {
     telegram,
     twitter,
     discord,
-    setCollectionAddress,
-    setReceiver,
     setNickname,
     setPosition,
     setPowers,
     setTelegram,
     setTwitter,
     setDiscord,
-    clearMint} = useMintSBTStorage();
+    clearMint} = useMintNFTStorage();
+
+  const {addUserProxy} = useUserProxyStore();
 
   const [isModalShown, setIsModalShown] = useState(false);
   const [contractDeployResult, setContractDeployResult] = React.useState<ContractDeployResultType>(null);
@@ -45,16 +45,11 @@ export const MintProxy = () => {
     powerError: false,
     socialsError: false
   });
-  const router = useRouter();
 
   // eslint-disable-next-line complexity,sonarjs/cognitive-complexity
   const mint = async () => {
     if (!collectionAddress) {
       setError({...error, collectionAddressError: true});
-      return;
-    }
-    if (!receiver) {
-      setError({...error, receiverError: true});
       return;
     }
     if (!nickname) {
@@ -67,10 +62,6 @@ export const MintProxy = () => {
     }
     if (!powers) {
       setError({...error, powerError: true});
-      return;
-    }
-    if (!telegram && !twitter && !discord) {
-      setError({...error, socialsError: true});
       return;
     }
 
@@ -95,13 +86,18 @@ export const MintProxy = () => {
         if (response.ok) {
           await mintNFT(collectionAddress, address as string, tokenId);
           const createAccountData = await createAccount({tokenCollection: collectionAddress, tokenId});
-          const setExecutorResult = await setExecutor(receiver, createAccountData.events.AccountCreated.returnValues.account);
-          console.log(setExecutorResult);
-          if (setExecutorResult) {
+          if (createAccountData) {
+            addUserProxy({
+              contractAddress: createAccountData.events.AccountCreated.returnValues.account,
+              collectionAddress,
+              collectionName: '',
+              collectionSymbol: '',
+              tokenId: tokenId.toString(),
+              executor: receiver
+            });
             setLoadDeployment(false);
             setContractDeployResult('deployed');
             clearMint();
-            await router.push('/collections');
           } else {
             setLoadDeployment(false);
             // eslint-disable-next-line sonarjs/no-duplicate-string
@@ -127,42 +123,31 @@ export const MintProxy = () => {
   };
 
 
-  return <><P size="l" weight="bold" style={{marginTop: '40px'}}>Create New Proxy</P>
+  return <>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', width: '50%'}}>
+      <P size="l" weight="bold" style={{fontFamily: 'Panchang'}} color={'white'} className={styles.underline}>Step 2. </P>
+      <P color={'white'}>Create New Proxy</P>
+    </div>
     <Card style={{marginTop: '40px', gap: '18px'}}>
-      <P size="sm" weight="bold">Proxy Group</P>
-      <Input placeholder="Proxy Group Address" id={'collection_address_id'} onChange={(e) => {
-        setError({...error, collectionAddressError: false});
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        setCollectionAddress(e.target.value);
-      }} style={error.collectionAddressError ? errorStyle : undefined} value={collectionAddress}/>
-      <P size="sm" weight="bold" style={{marginTop: '20px'}}>Identify the Agent</P>
-      <Input placeholder="Agent Soul Address" id={'receiver_address_id'} onChange={(e) => {
-        setError({...error, receiverError: false});
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        setReceiver(e.target.value);
-      }} style={error.receiverError ? errorStyle : undefined} value={receiver}/>
-      <Input placeholder="Agent Nickname" id={'nickname_id'} onChange={(e) => {
+      <Input placeholder="Trustee's name" id={'nickname_id'} onChange={(e) => {
         setError({...error, nicknameError: false});
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         setNickname(e.target.value);
       }} style={error.nicknameError ? errorStyle : undefined} value={nickname}/>
-      <P size="sm" weight="bold" style={{marginTop: '20px'}}>Describe his role in DAO</P>
-      <Input placeholder="Position name" id={'position_name_id'} onChange={(e) => {
+      <Input placeholder="Trustee's role" id={'position_name_id'} onChange={(e) => {
         setError({...error, positionError: false});
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         setPosition(e.target.value);
       }} style={error.positionError ? errorStyle : undefined} value={position}/>
-      <Textarea placeholder="Powers Description" id={'powers_id'} onChange={(e) => {
+      <Textarea placeholder="Describe Trustee powers in DA" id={'powers_id'} onChange={(e) => {
         setError({...error, powerError: false});
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         setPowers(e.target.value);
       }} style={error.powerError ? errorStyle : undefined} value={powers}/>
-      <P size="sm" weight="bold" style={{marginTop: '20px'}}>Provide Agent’s public contacts</P>
+      <P size="sm" weight="bold" style={{marginTop: '20px'}}>Trustee&apos;s contacts</P>
       {/* eslint-disable-next-line sonarjs/no-duplicate-string */}
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px'}}>
         <P weight="bold">1. Telegram</P>
@@ -197,7 +182,7 @@ export const MintProxy = () => {
           }} style={error.socialsError ? errorStyle : undefined} value={discord}/>
         </div>
       </div>
-      <Button size="l" style={{marginTop: '40px'}} onClick={() => mint()}>Create proxy</Button>
+      <Button size="l" style={{marginTop: '40px'}} onClick={mint} disabled={!nickname || !position || !powers}>Create proxy</Button>
     </Card>
     <Modal modalTitle="Verification result" isShown={isModalShown} hide={() => closeModal()}>
       {loadDeployment
@@ -207,7 +192,7 @@ export const MintProxy = () => {
         </div>
         : <>
           {contractDeployResult === 'deployed' && (
-            <><P size="l" style={{textAlign: 'center', color: 'green'}}>SBT was minted successfully</P></>
+            <><P size="l" style={{textAlign: 'center', color: 'green'}}>NFT was minted successfully</P></>
           )}
           {contractDeployResult === 'not-deployed' && (
             <><P size="l" style={{textAlign: 'center', color: 'red'}}>Something go wrong, please try again</P></>

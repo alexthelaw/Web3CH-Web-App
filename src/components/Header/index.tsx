@@ -1,21 +1,26 @@
 import React, {useState} from 'react';
 import Image from 'next/image';
 import styles from './Header.module.scss';
-import Logo from '../../../public/assets/logo.png';
+import Logo from '../../../public/assets/logo.svg';
 import {P} from '../P/P';
 import ArrowDown from '../../../public/assets/arrow.svg';
-import {redirect, startAndEnd} from '../../utils/misc';
+import {startAndEnd} from '../../utils/misc';
 import cn from 'classnames';
 import Link from 'next/link';
-import {useAccount} from 'wagmi';
+import {useAccount, useDisconnect} from 'wagmi';
+import {useRouter} from 'next/router';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const {address} = useAccount();
+  const {disconnect} = useDisconnect();
+  const router = useRouter();
 
-  const logOut = () => {
+  const logOut = async () => {
+    setIsMenuOpen(false);
     localStorage.clear();
-    redirect('/welcome');
+    await disconnect();
+    await router.push('/');
   };
 
   return (
@@ -23,8 +28,7 @@ export function Header() {
       <Link href="/">
         <a>
           <div className={styles.logo}>
-            <Image src={Logo} width={64} height={64}/>
-            <P weight="bold" size="m" color="black">DAO Ambassador</P>
+            <Image src={Logo} width={200} height={64}/>
           </div>
         </a>
       </Link>

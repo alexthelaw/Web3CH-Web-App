@@ -144,13 +144,10 @@ export const ProxyDetailsPage: FC<{accountAddress: string}> = ({accountAddress})
                   <P style={{marginTop: '18px'}}>{metaData.socialAccounts.discord}</P>
                 </div>
               </div>
-              <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                <div style={{opacity: 0}}>
-                  <P size="sm" weight="bold">Telegramaaaaaaaaaaq</P>
-                </div>
+              <div style={{display: 'flex', justifyContent: 'space-evenly'}}>
                 <div>
                   <P size="sm" weight="bold">Proxy Account</P>
-                  <P style={{marginTop: '18px'}}>{startAndEnd(accountAddress, 4, 4)}</P>
+                  <P style={{marginTop: '18px'}}>{startAndEnd(accountAddress, 4, 4)}<Copy text={accountAddress} style={{marginLeft: '10px', verticalAlign: '-2px'}} variant={'light'}/></P>
                 </div>
                 <div>
                   <P size="sm" weight="bold">Proxy Balance</P>

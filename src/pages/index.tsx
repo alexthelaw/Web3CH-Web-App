@@ -35,11 +35,16 @@ export default function IndexPage(): ReactNode {
             <Image src={LogoColor}/>
             <div className={styles.wrapper}>
               <P color={'white'} style={{fontFamily: 'Panchang', fontSize: '50px'}}>
-              Web3ch:
+              Web3ch
               </P>
-              <P size={'m'} color={'white'} style={{maxWidth: '430px'}}>
-              NFT-Powered Delegation: Streamline Your DAO Fund Management with ERC-6551 Tokens
-              </P>
+              <div>
+                <P size={'m'} color={'white'} style={{maxWidth: '430px', textAlign: 'center'}}>
+              NFT-Powered Delegation.
+                </P>
+                <P size={'m'} color={'white'} style={{maxWidth: '430px', textAlign: 'center'}}>
+              Streamline Your DAO Fund Management with ERC-6551 Tokens
+                </P>
+              </div>
               <div className={styles.btns}>
                 <Button view={'white'} onClick={connectClick}>DELEGATE POWERS</Button>
                 <Button view={'white'} onClick={goToVerify}>VERIFY POWERS</Button>

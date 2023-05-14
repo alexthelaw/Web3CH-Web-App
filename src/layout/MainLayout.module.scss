@@ -21,6 +21,15 @@
   z-index: 0;
 }
 
+@media screen and (max-width: 1200px) {
+  .form_bg {
+    width: 780px;
+    height: 590px;
+    background-position: center;
+    background-size: cover;
+  }
+}
+
 .main {
   z-index: 1;
   position: relative;
